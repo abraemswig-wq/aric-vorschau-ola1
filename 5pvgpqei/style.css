@@ -1,0 +1,185 @@
+/* Aric Brämswig — Original-Look nach dwart.krakow.pl (Werte live gemessen 2026-11-19).
+   Schrift: Oswald 400/700 + EB Garamond 400 (OFL, lokal). Native Seiten-Scroll statt #wrapper. */
+@font-face{font-family:'Oswald';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/oswald-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Oswald';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/oswald-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'EB Garamond';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/eb-garamond-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'EB Garamond';font-style:italic;font-weight:400;font-display:swap;src:url(fonts/eb-garamond-latin-400-italic.woff2) format('woff2')}
+
+:root{--black:#000;--white:#fff;--grey:#838383;--paper:#f7f7f7;--about:#1a1a1a;--tl:90px;
+  --h:calc(48px + (160 - 48) * ((100vw - 460px) / (1920 - 460)));
+  --big:calc(120px + (320 - 120) * ((100vw - 460px) / (1920 - 460)));
+  --nav:calc(24px + (64 - 24) * ((100vw - 460px) / (1920 - 460)))}
+*,*::before,*::after{box-sizing:border-box}
+html{background:#000}
+body{margin:0;background:#000;color:#fff;font:400 16px/1.5 'EB Garamond',serif;overflow-x:hidden}
+body.locked{overflow:hidden}
+::selection{background:rgba(255,255,255,.99);color:#000}
+h1,h2,h3{margin:0;padding:0;font-family:'Oswald',sans-serif;font-weight:700;text-transform:uppercase}
+h1,h2,h3.ttl{font-size:var(--h)}
+p{margin:0;line-height:200%}
+ul{line-height:200%}
+a{color:#fff;text-decoration:underline;text-underline-offset:2px}
+img{display:block;width:100%;height:auto;user-select:none}
+.big{font-size:var(--big);white-space:nowrap}
+.dash{padding-top:30px;width:30px;border-bottom:1px solid var(--grey)}
+.caption{padding-top:30px;color:var(--grey);font-size:11px;line-height:22px}
+.caption a{color:var(--grey)}
+.border{border:1px solid var(--paper)}
+.loading{background:var(--paper)}
+.vh_100{position:relative;display:block;width:100%;min-height:100vh}
+.clear{clear:both}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:fixed;left:16px;top:-60px;z-index:20000;background:#fff;color:#000;padding:10px 14px;font-family:'Oswald',sans-serif}
+.skip:focus{top:16px}
+:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.todo{display:inline-block;background:#ffd400;color:#000;font:700 10px/1 'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.06em;padding:3px 6px;vertical-align:middle}
+
+/* ---------- Loader ---------- */
+.loader{position:fixed;inset:0;z-index:10000;background:#000;transition:opacity .45s ease-out}
+.loader.done{opacity:0;pointer-events:none}
+.spinner{position:absolute;top:50%;left:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border:2px solid #fff;border-right-color:transparent;border-bottom-color:transparent;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- Cursor ---------- */
+.cursor{position:fixed;display:none;width:24px;height:24px;margin:-12px 0 0 -12px;background:#fff;border-radius:100%;z-index:10000;pointer-events:none;mix-blend-mode:difference;transition:transform .2s ease-out;left:-100px;top:-100px}
+@media (hover:hover) and (pointer:fine){ .custom-cursor .cursor{display:block} }
+.cursor.active{transform:scale(2)}
+
+/* ---------- Hamburger + Nav ---------- */
+.hamburger{position:fixed;z-index:2000;width:48px;height:48px;top:22px;right:24px;padding:11px 0 0;border:0;background:#000;border-radius:50%;mix-blend-mode:difference;cursor:pointer}
+.hamburger .line{width:24px;height:2px;background:#fff;display:block;margin:5px auto;transition:all .3s ease-out}
+.hamburger.is-active .line:nth-child(2){opacity:0}
+.hamburger.is-active .line:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.is-active .line:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+nav{position:fixed;top:0;right:0;z-index:1500;width:0;height:100%;overflow:hidden;background:#fff;font:700 var(--nav) 'Oswald',sans-serif;transition:all .2s ease-out;visibility:hidden}
+nav.show{width:100%;visibility:visible}
+nav ul{position:absolute;top:50%;left:90px;width:100%;margin:0;padding:0;list-style:none;line-height:normal;transform:translateY(-50%)}
+nav li{display:block;padding:0 15px}
+nav a{color:#000;text-decoration:none;display:inline-block;white-space:nowrap}
+nav .prompt{position:relative;left:-.25ch;display:inline-block}
+nav .prompt.off{visibility:hidden}
+nav.white_bg{background:#000}
+nav.white_bg a{color:#fff}
+
+.bounce{animation:bounce 2s infinite}
+@keyframes bounce{0%,20%,50%,80%,100%{transform:translateY(0)}40%{transform:translateY(-10px)}60%{transform:translateY(-10px)}}
+
+/* ---------- Welcome (gepinnt) ---------- */
+.welcome-pin{position:relative;height:300vh;z-index:200}
+.welcome{position:sticky;top:0;height:100vh;overflow:hidden;pointer-events:none;user-select:none;background:#000}
+.welcome .scrollinfo{position:absolute;bottom:60px;left:50%;z-index:10;transform:translateX(-50%);transition:all .2s ease-out;text-align:center}
+.welcome .scrollinfo.start{opacity:0;bottom:90px}
+.welcome .scrollinfo.hidden{opacity:0;bottom:0}
+.welcome .scrollinfo .dot{width:4px;height:4px;display:inline-block;background:#fff;border-radius:100%}
+.welcome .scrollinfo .arrow{border:solid #fff;border-width:0 2px 2px 0;display:inline-block;padding:9px;transform:rotate(45deg)}
+.welcome .square_conteiner{position:absolute;z-index:10;top:0;left:0;width:100vw;height:100%;overflow:hidden}
+.welcome .square{position:absolute;z-index:10;top:50%;left:50%;width:0;height:65%;overflow:hidden;transform:translate(-50%,-50%)}
+.welcome .square picture{display:contents}
+.welcome .square img{position:relative;height:100%;width:auto;max-width:none;left:50%;top:50%;transform:translate(-50%,-50%)}
+.welcome h1{position:absolute;z-index:20;top:50%;left:50%;text-align:center;mix-blend-mode:difference;white-space:nowrap;transform:translate(-50%,-50%);line-height:normal}
+.welcome h1 .name>span{position:relative;display:inline-block;opacity:0;transition:opacity .5s ease-out}
+.welcome h1.in .name>span{opacity:1}
+.welcome h1 .name>span.text{z-index:30}
+.welcome h1 .typeit{display:block;font-size:.3em;font-weight:400;transform-origin:50% 50%}
+.welcome h1 .prompt{position:relative;left:-.25ch;display:inline-block}
+.welcome h1 .prompt.off{visibility:hidden}
+.welcome .experience{position:absolute;z-index:40;top:50%;left:100vw;margin-top:-.14em;white-space:nowrap;mix-blend-mode:difference;color:#fff;transform:translateY(-50%);font-family:'Oswald',sans-serif;font-weight:700;text-transform:uppercase;line-height:normal}
+
+/* ---------- Portfolio / Werdegang ---------- */
+.portfolio{position:relative;z-index:100;background:#fff;color:#000}
+.portfolio ::selection{background:rgba(0,0,0,.99);color:#fff}
+.portfolio a{color:#000}
+.portfolio .timeline{position:absolute;top:0;left:0;width:var(--tl);height:100%;border-right:1px solid #000;z-index:3;pointer-events:none}
+.portfolio .timeline .date{position:sticky;top:150px;left:45px;width:0;font:700 44px/100% 'Oswald',sans-serif;text-transform:uppercase;white-space:nowrap}
+.portfolio .timeline .date span{display:block;position:relative;left:45px;transform:rotate(270deg) translate(0,50%);transform-origin:left bottom}
+.portfolio section{position:relative;padding:60px 15px 60px 105px}
+.portfolio section .dot{position:absolute;left:83px;top:140px;z-index:5;width:13px;height:13px;background:#000;border-radius:100%}
+.portfolio section .dot.pinned{position:fixed;top:140px}
+.portfolio section .title{position:relative;z-index:11;overflow:hidden;color:#fff;mix-blend-mode:difference;padding:0 0 15px!important}
+.portfolio section .title ::selection{background:rgba(255,255,255,.99);color:#000}
+.portfolio section .title .ttl{display:inline-block;position:relative;text-transform:none;line-height:100%;padding:15px!important;word-break:break-all;overflow-wrap:break-word;hyphens:none;will-change:transform}
+.portfolio section .title .ttl span{white-space:nowrap}
+.portfolio section .img{position:relative;z-index:10;will-change:transform}
+.portfolio section .txt{position:relative;z-index:20}
+.portfolio .kicker{font:400 18px/1.4 'Oswald',sans-serif;text-transform:uppercase;padding-bottom:12px;letter-spacing:.01em}
+.portfolio .logo{background:none;padding:12% 0}
+.portfolio .logo img{max-width:260px!important;margin:0 auto}
+.portfolio .logo.wide img{max-width:340px!important}
+
+.container{position:relative;width:100%;max-width:1170px;margin:0 auto}
+.container .column{position:relative;float:left;margin:0;padding:15px}
+.container .column.w_40{width:40%}.container .column.w_40 img{max-width:396px}
+.container .column.w_50{width:50%}.container .column.w_50 img{max-width:555px}
+.container .column.w_75{width:75%}.container .column.w_75 img{max-width:848px}
+.container .column.right{float:right}
+.container .column.right .loading:not(.border){margin-left:auto}
+.container .column.w_40 .loading{max-width:396px}
+
+/* ---------- Haltung / About / Contact ---------- */
+.haltung,.about,.contact{position:relative;z-index:200;overflow:hidden;display:flex;align-items:center}
+.haltung .inner,.about .inner,.contact .inner{position:relative;z-index:11;margin:0 auto;width:100%;max-width:1275px;padding:60px 15px 60px 90px}
+.haltung .title,.about .title,.contact .title{position:relative;overflow:hidden;color:#fff;padding:0 0 15px!important}
+.haltung h2,.about h2,.contact h2{display:inline-block;position:relative;white-space:nowrap;text-transform:none;line-height:100%;padding:15px!important;will-change:transform}
+.haltung .txt,.about .txt,.contact .txt{position:relative;padding:15px!important;max-width:1140px}
+.haltung ul{list-style:none;margin:0;padding:0}
+.haltung li{display:inline;padding:0 15px 0 0;white-space:nowrap;text-decoration:underline;text-underline-offset:2px}
+.haltung .bg{position:absolute;inset:0;z-index:1;opacity:.75;overflow:hidden}
+.haltung .bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.55);animation:drift 24s ease-in-out infinite alternate}
+@keyframes drift{from{transform:scale(1.04) translateX(-1%)}to{transform:scale(1.14) translateX(1.5%)}}
+.about{background-color:var(--about);background-image:url(img/about-portrait.jpg);background-image:image-set(url(img/about-portrait.webp) type('image/webp'),url(img/about-portrait.jpg) type('image/jpeg'));background-repeat:no-repeat;background-size:100%;background-position:center 140%;background-attachment:fixed}
+.about::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--about) 0%,var(--about) 30%,rgba(26,26,26,.55) 62%,rgba(26,26,26,.2) 100%);z-index:2}
+.contact{background:#000}
+
+/* ---------- Responsiv (Referenz-Breakpoints) ---------- */
+@media (min-width:1920px){:root{--h:160px;--big:320px;--nav:64px}}
+@media (max-width:768px){
+  :root{--tl:60px}
+  nav ul{left:60px}
+  .container .column{padding:10px}
+  .welcome .experience{margin-top:-.115em}
+  .welcome .scrollinfo{bottom:40px}.welcome .scrollinfo.start{bottom:60px}
+  .portfolio .timeline .date{font-size:40px;top:118px}
+  .portfolio .timeline .date span{left:30px}
+  .portfolio section{padding:60px 15px 60px 75px}
+  .portfolio section .title{padding:0 0 10px!important}
+  .portfolio section .title .ttl{padding:10px!important}
+  .portfolio section .txt{width:100%!important}
+  .portfolio section .dot{width:11px;height:11px;left:54px;top:110px}
+  .portfolio section .dot.pinned{top:110px}
+  .haltung .inner,.about .inner,.contact .inner{padding:60px 15px 60px 50px}
+  .haltung h2,.haltung .txt,.about h2,.about .txt,.contact h2,.contact .txt{padding:10px!important}
+  .about{background-size:175%;background-attachment:scroll;background-position:center bottom}
+  .scrollinfo .dot{width:3px;height:3px}.scrollinfo .arrow{padding:5px!important}
+  .welcome h1 .typeit{font-size:12px}
+}
+@media (max-width:480px){
+  body{font-size:15px}
+  :root{--tl:50px}
+  nav ul{left:50px}
+  .container .column{padding:5px}
+  .container .column.w_75{width:85%}
+  .container .column.w_40{width:50%}
+  .container .column.w_50.title{width:100%}
+  p,ul{line-height:175%}
+  .portfolio .timeline .date{font-size:30px}
+  .portfolio .timeline .date span{left:23px}
+  .portfolio section{padding-left:60px}
+  .portfolio section .title{padding:0 0 5px!important}
+  .portfolio section .title .ttl{padding:5px!important}
+  .portfolio section .dot{width:9px;height:9px;left:45px}
+  .portfolio .kicker{font-size:16px}
+  .haltung .inner,.about .inner,.contact .inner{padding-left:45px}
+  .haltung h2,.haltung .txt,.about h2,.about .txt,.contact h2,.contact .txt{padding:5px!important}
+  .haltung li{display:block}
+}
+
+/* ---------- Reduzierte Bewegung: alles steht, nichts gepinnt ---------- */
+@media (prefers-reduced-motion:reduce){
+  .loader{display:none}
+  .bounce,.haltung .bg img{animation:none}
+  .welcome-pin{height:auto}
+  .welcome{position:relative}
+  .welcome h1 .name>span{opacity:1}
+  .welcome .square{width:min(65vh,80vw)}
+  .welcome .experience{display:none}
+}

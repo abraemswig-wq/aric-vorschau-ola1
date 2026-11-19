@@ -1,0 +1,16 @@
+/* Rechtsseiten im Look der Startseite: weiß wie der Werdegang, Oswald-Überschriften, Garamond-Text */
+body.legal{background:#fff;color:#000}
+body.legal ::selection{background:rgba(0,0,0,.99);color:#fff}
+body.legal a{color:#000}
+.legal-head{display:flex;justify-content:space-between;align-items:center;padding:28px 24px 0 90px;font:400 18px 'Oswald',sans-serif;text-transform:uppercase}
+.legal-head a{text-decoration:none}
+.legal-head .home{font-weight:700;font-size:22px}
+.legal-main{max-width:1170px;margin:0 auto;padding:60px 15px 60px 90px}
+.legal-main h1{font-size:var(--h);text-transform:none;line-height:100%;padding-bottom:40px}
+.legal-main h2{font-size:28px;text-transform:uppercase;line-height:1.2;margin:40px 0 10px}
+.legal-main p,.legal-main li{max-width:760px}
+.legal-main .section{border-top:1px solid #000;padding-top:4px}
+.legal-main .entry-role,.legal-main .entry-title{font:400 14px 'Oswald',sans-serif;text-transform:uppercase;color:#838383}
+.legal-foot{padding:30px 24px 40px 90px;font-size:11px;color:#838383}
+.legal-foot a{color:#838383}
+@media (max-width:768px){.legal-head,.legal-main,.legal-foot{padding-left:24px}}

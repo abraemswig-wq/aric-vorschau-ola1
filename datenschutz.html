@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive,noimageindex">
+<meta name="theme-color" content="#000000">
+<title>Datenschutz · Aric Brämswig</title>
+<style>
+@font-face{font-family:'Oswald';font-weight:700;font-display:swap;src:url(5pvgpqei/fonts/oswald-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'EB Garamond';font-weight:400;font-display:swap;src:url(5pvgpqei/fonts/eb-garamond-latin-400-normal.woff2) format('woff2')}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:#000;color:#fff;font-family:'EB Garamond',serif;display:flex;align-items:center;justify-content:center;padding:24px}
+.gate{width:min(380px,100%);opacity:0;pointer-events:none;transition:opacity .2s}
+.gate.show{opacity:1;pointer-events:auto}
+h1{margin:0 0 6px;font:700 56px/1 'Oswald',sans-serif}
+p{margin:0 0 26px;font-size:16px;line-height:1.7;color:#838383}
+form{display:flex;flex-direction:column;gap:12px}
+input{width:100%;min-height:48px;padding:0 14px;background:#111;border:1px solid #444;color:#fff;font:inherit;font-size:16px}
+input:focus{outline:none;border-color:#fff}
+button{min-height:48px;border:0;background:#fff;color:#000;font:700 16px 'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.04em;cursor:pointer}
+.err{min-height:20px;font-size:14px;color:#ff8a7a}
+</style>
+</head>
+<body>
+<div class="gate" id="g">
+  <h1>Vorschau;</h1>
+  <p>Aric Br&auml;mswig &middot; Diese Seite ist noch nicht &ouml;ffentlich. Bitte Passwort eingeben.</p>
+  <form id="f">
+    <input id="p" type="password" autocomplete="current-password" placeholder="Passwort" aria-label="Passwort" autofocus>
+    <button type="submit">&Ouml;ffnen</button>
+    <div class="err" id="e" role="alert"></div>
+  </form>
+</div>
+<script>
+(function(){
+  var KEYS="d/keys.json", DAT="d/datenschutz.dat", KEY="adw-k";
+  var enc=new TextEncoder();
+  function bin(s){return Uint8Array.from(atob(s),function(c){return c.charCodeAt(0)})}
+  function b64(b){var a=new Uint8Array(b),s="";for(var i=0;i<a.length;i++)s+=String.fromCharCode(a[i]);return btoa(s)}
+  function render(html){document.open();document.write(html);document.close();}
+  async function decrypt(key){
+    var r=await fetch(DAT,{cache:"no-store"}); if(!r.ok) throw new Error("dat");
+    var buf=bin((await r.text()).trim());
+    var pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:buf.slice(0,12)},key,buf.slice(12));
+    return new TextDecoder().decode(pt);
+  }
+  function importRaw(b){return crypto.subtle.importKey("raw",b,{name:"AES-GCM",length:256},true,["decrypt"])}
+  async function unwrap(pw){
+    var meta=await (await fetch(KEYS,{cache:"no-store"})).json();
+    for(var i=0;i<meta.k.length;i++){
+      var e=meta.k[i];
+      try{
+        var base=await crypto.subtle.importKey("raw",enc.encode(pw),"PBKDF2",false,["deriveKey"]);
+        var kek=await crypto.subtle.deriveKey({name:"PBKDF2",salt:bin(e.s),iterations:meta.it,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["decrypt"]);
+        return await crypto.subtle.decrypt({name:"AES-GCM",iv:bin(e.i)},kek,bin(e.w));
+      }catch(_){}
+    }
+    throw new Error("pw");
+  }
+  var cached=null; try{cached=sessionStorage.getItem(KEY)}catch(_){}
+  if(cached){ importRaw(bin(cached)).then(decrypt).then(render).catch(function(){try{sessionStorage.removeItem(KEY)}catch(_){} show();}); }
+  else show();
+  function show(){
+    document.getElementById("g").classList.add("show");
+    document.getElementById("f").addEventListener("submit",async function(ev){
+      ev.preventDefault();
+      var e=document.getElementById("e"),btn=document.querySelector("button");
+      e.textContent=""; btn.disabled=true; btn.textContent="\u2026";
+      try{
+        var cek=await unwrap(document.getElementById("p").value);
+        var html=await decrypt(await importRaw(cek));
+        try{sessionStorage.setItem(KEY,b64(cek))}catch(_){}
+        render(html);
+      }catch(_){
+        e.textContent="Passwort stimmt nicht."; btn.disabled=false; btn.textContent="\u00D6ffnen";
+        document.getElementById("p").select();
+      }
+    });
+  }
+})();
+</script>
+</body>
+</html>
