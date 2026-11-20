@@ -136,10 +136,10 @@ nav.white_bg a{color:#fff}
   :root{--tl:60px}
   nav ul{left:60px}
   .container .column{padding:10px}
-  .welcome .experience{margin-top:-.115em}
+  .welcome .experience{margin-top:-.115em;top:74%}
   .welcome .scrollinfo{bottom:40px}.welcome .scrollinfo.start{bottom:60px}
-  .portfolio .timeline .date{font-size:40px;top:118px}
-  .portfolio .timeline .date span{left:30px}
+  .portfolio .timeline .date{font-size:30px;top:110px}
+  .portfolio .timeline .date span{left:-4px}
   .portfolio section{padding:60px 15px 60px 75px}
   .portfolio section .title{padding:0 0 10px!important}
   .portfolio section .title .ttl{padding:10px!important}
@@ -150,19 +150,29 @@ nav.white_bg a{color:#fff}
   .haltung h2,.haltung .txt,.about h2,.about .txt,.contact h2,.contact .txt{padding:10px!important}
   .about{background-size:175%;background-attachment:scroll;background-position:center bottom}
   .scrollinfo .dot{width:3px;height:3px}.scrollinfo .arrow{padding:5px!important}
-  .welcome h1 .typeit{font-size:12px}
+  .welcome h1 .typeit{font-size:15px}
+  /* Mobil-Feinschliff 2026-11-20 */
+  .caption{font-size:13px;line-height:20px}
+  .container .column.w_75,.container .column.w_75.img{width:100%}
+  .container .column.w_40{width:78%}
+  .container .column.w_40.right{width:50%}
+  .portfolio section{padding-bottom:30px}
+  .portfolio section .txt{padding-bottom:0!important}
+  .haltung .caption,.about .caption{color:#c4c4c4;text-shadow:0 1px 6px rgba(0,0,0,.7)}
+  .hamburger{top:12px;right:12px;width:44px;height:44px;padding-top:10px}
 }
 @media (max-width:480px){
   body{font-size:15px}
   :root{--tl:50px}
   nav ul{left:50px}
   .container .column{padding:5px}
-  .container .column.w_75{width:85%}
-  .container .column.w_40{width:50%}
   .container .column.w_50.title{width:100%}
   p,ul{line-height:175%}
-  .portfolio .timeline .date{font-size:30px}
-  .portfolio .timeline .date span{left:23px}
+  .container .column.w_75{width:100%}
+  .container .column.w_40{width:78%}
+  .container .column.w_40.right{width:50%}
+  .portfolio .timeline .date{font-size:22px;top:96px}
+  .portfolio .timeline .date span{left:-10px}
   .portfolio section{padding-left:60px}
   .portfolio section .title{padding:0 0 5px!important}
   .portfolio section .title .ttl{padding:5px!important}

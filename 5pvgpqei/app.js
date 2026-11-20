@@ -128,7 +128,7 @@
       const ph = clamp((y - (top - d / 2)) / (0.25 * d));
       o.ttl.style.transform = `translateX(${(ph - 1) * 100}%)`;
       const pi = clamp((y - (h2Top - d / 4)) / (2 * d));
-      o.img.style.marginTop = (-(vw < 769 ? 0.22 : 0.6) * d * pi) + 'px';
+      o.img.style.marginTop = vw < 769 ? '0px' : (-0.6 * d * pi) + 'px';
     });
     if (cur !== lastDate) { dateEl.innerHTML = `<span>${cur}</span>`; lastDate = cur; }
     // Schlusskapitel: Überschrift schiebt sich herein
