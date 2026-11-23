@@ -64,6 +64,17 @@
     document.addEventListener('mouseover', e => c.classList.toggle('active', !!e.target.closest('a,button')));
   }
 
+  /* ---------- Live-Intros: starten von vorn, sobald sie ins Bild kommen ---------- */
+  const lives = $$('video.live');
+  if (!reduce && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      const v = e.target;
+      if (e.isIntersecting) { if (v.paused) { v.preload = 'auto'; try { v.currentTime = 0; } catch (_) {} v.play().catch(() => {}); } }
+      else v.pause();
+    }), { threshold: 0.35 });
+    lives.forEach(v => io.observe(v));
+  }
+
   if (reduce) return;
 
   /* ---------- Messen ---------- */
