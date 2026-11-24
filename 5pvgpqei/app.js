@@ -83,7 +83,7 @@
         dateEl = $('.timeline .date'), portfolio = $('.portfolio');
   const letters = $$('.name > span', h1);
   const textSpans = letters.filter(s => s.classList.contains('text')).map(s => ({ el: s, from: s.textContent, to: s.dataset.word }));
-  const secs = $$('.portfolio section').map(s => ({ s, dot: $('.dot', s), ttl: $('.ttl', s), img: $('.img', s), txt: $('.txt', s), date: s.dataset.date }));
+  const secs = $$('.portfolio section').map(s => ({ s, dot: $('.dot', s), ttl: $('.ttl', s), img: $('.img', s), txt: $('.txt', s), mark: $('.mark', s), ball: $('.ball', s), date: s.dataset.date }));
   const tails = $$('.haltung, .about, .contact').map(s => ({ s, h2: $('h2', s) }));
   let d, vw, tlW, expW, M = {};
   const docTop = el => el.getBoundingClientRect().top + scrollY;
@@ -136,6 +136,19 @@
       o.dot.style.transform = `translateY(${clamp(y - top, 0, 0.5 * d)}px)`;
       const ph = clamp((y - (top - d / 2)) / (0.25 * d));
       o.ttl.style.transform = `translateX(${(ph - 1) * 100}%)`;
+      if (o.mark) {
+        // Marke kommt kurz nach dem Titel von außen herein: Dackel läuft ein, Ball rollt voraus, Signet dreht sich ein
+        const pm = clamp((y - (top - d / 2 + 0.1 * d)) / (0.35 * d)), e = 1 - Math.pow(1 - pm, 3);
+        const dir = o.s.querySelector('.flip') && vw > 768 ? -1 : 1;
+        if (o.ball) {
+          o.mark.style.transform = `translateX(${dir * (1 - e) * 70}vw)`;
+          o.ball.style.transform = `translateX(${dir * -(1 - pm) * 12}vw) rotate(${-dir * (1 - e) * 900}deg)`;
+          o.mark.querySelector('.dog').style.transform = `translateY(${Math.abs(Math.sin(pm * 14)) * -8 * (1 - pm)}%)`;
+        } else {
+          o.mark.style.transform = `translateX(${dir * (1 - e) * 55}vw) rotate(${(1 - e) * 300}deg)`;
+        }
+        o.mark.style.opacity = pm > 0 ? 1 : 0;
+      }
     });
     if (cur !== lastDate) { dateEl.innerHTML = `<span>${cur}</span>`; lastDate = cur; }
     // Schlusskapitel: Überschrift schiebt sich herein
