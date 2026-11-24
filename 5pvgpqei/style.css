@@ -185,6 +185,28 @@ nav.white_bg a{color:#fff}
 }
 
 /* ---------- Reduzierte Bewegung: alles steht, nichts gepinnt ---------- */
+/* ---------- Werdegang: jede Station ein geschlossener Block ---------- */
+.portfolio section{padding-top:90px;padding-bottom:90px}
+.unit .title{text-align:left}
+.unit.flip .title{text-align:right}
+.unit .row{display:grid;grid-template-columns:7fr 5fr;gap:60px;align-items:center;padding:0 15px}
+.unit.flip .row{grid-template-columns:5fr 7fr}
+.unit.flip .media{order:2}
+.unit .media{position:relative}
+.unit .media .loading{max-width:none}
+.unit .media .loading img,.unit .media video.live{display:block;width:100%;height:auto;max-width:none!important}
+.unit .inset{position:absolute;z-index:2;width:30%;left:-5%;bottom:-14%;border:8px solid #fff;background:#fff}
+.unit .inset img{display:block;width:100%;height:auto}
+.unit .txt{padding:0}
+@media (max-width:768px){
+  .unit .row,.unit.flip .row{grid-template-columns:1fr;gap:28px;padding:0 10px}
+  .unit.flip .media{order:0}
+  .unit.flip .title{text-align:left}
+  .unit .inset{width:34%;left:auto;right:0;bottom:-10%;border-width:5px}
+  .unit .media:has(.inset){margin-bottom:9%}
+  .portfolio section{padding-top:60px;padding-bottom:60px}
+}
+
 @media (prefers-reduced-motion:reduce){
   .loader{display:none}
   .bounce,.haltung .bg img{animation:none}

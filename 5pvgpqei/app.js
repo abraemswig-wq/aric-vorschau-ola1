@@ -129,17 +129,13 @@
     const pr = portfolio.getBoundingClientRect();
     nav.classList.toggle('white_bg', pr.top <= 0 && pr.bottom > 0);
     let cur = secs[0].date;
-    // Wie die Referenz: margin-top des Bildes zieht Bild + Text im Layout nach oben
-    // (Inhalt läuft schneller als der Scroll, ohne Lücke). Positionen daher live lesen.
+    // Jede Station ist ein geschlossener Block; nur Punkt und Titel bewegen sich.
     secs.forEach(o => {
       const top = o.s.getBoundingClientRect().top + y;
-      const h2Top = o.ttl.parentNode.getBoundingClientRect().top + y;
       if (y >= top - 1) cur = o.date;
       o.dot.style.transform = `translateY(${clamp(y - top, 0, 0.5 * d)}px)`;
       const ph = clamp((y - (top - d / 2)) / (0.25 * d));
       o.ttl.style.transform = `translateX(${(ph - 1) * 100}%)`;
-      const pi = clamp((y - (h2Top - d / 4)) / (2 * d));
-      o.img.style.marginTop = vw < 769 ? '0px' : (-0.6 * d * pi) + 'px';
     });
     if (cur !== lastDate) { dateEl.innerHTML = `<span>${cur}</span>`; lastDate = cur; }
     // Schlusskapitel: Überschrift schiebt sich herein
