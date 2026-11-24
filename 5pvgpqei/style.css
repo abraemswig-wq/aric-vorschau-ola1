@@ -208,15 +208,17 @@ nav.white_bg a{color:#fff}
 }
 
 /* Bildmarken fliegen mit dem Titel ein */
-.unit .head{display:flex;align-items:center;gap:10px;overflow-x:clip;overflow-y:visible}
+.unit{--tp:15px}
+.unit .head{display:flex;align-items:flex-start;gap:10px;overflow-x:clip;overflow-y:visible}
 .unit.flip .head{flex-direction:row-reverse}
 .unit .head .title{flex:0 1 auto}
-.unit .mark{position:relative;flex:0 0 auto;height:calc(var(--h)*.9);display:flex;align-items:flex-end;gap:.6vw;opacity:0;will-change:transform}
+.unit .mark{position:relative;flex:0 0 auto;height:calc(var(--h)*.81);margin-top:calc(var(--h)*.142 + var(--tp));display:flex;align-items:flex-end;gap:.6vw;opacity:0;will-change:transform}
 .unit .mark img{height:100%;width:auto}
 .unit .mark.quint{flex-direction:row-reverse}
-.unit .mark .ball{display:block;width:calc(var(--h)*.2);height:calc(var(--h)*.2);border-radius:50%;background:#F092BC;margin-bottom:2%;will-change:transform}
-.unit .mark.r5{height:calc(var(--h)*.75)}
-@media (max-width:768px){.unit.flip .head{flex-direction:row}}
+.unit .mark .ball{display:block;width:calc(var(--h)*.2);height:calc(var(--h)*.2);border-radius:50%;background:#F092BC;will-change:transform}
+
+@media (max-width:768px){.unit{--tp:10px}.unit.flip .head{flex-direction:row}}
+@media (max-width:480px){.unit{--tp:5px}}
 @media (prefers-reduced-motion:reduce){.unit .mark{opacity:1}}
 
 @media (prefers-reduced-motion:reduce){
